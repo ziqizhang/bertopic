@@ -11,12 +11,15 @@ import matplotlib.pyplot as plt
 #%matplotlib inline
 
 print("{} Create topic model".format(datetime.datetime.now()))
-docs = fetch_20newsgroups(subset='all',  remove=('headers', 'footers', 'quotes'))["data"]
-topic_model=BERTopic.load("trained_2.topics")
-topics = topic_model.get_topics()
+docs = fetch_20newsgroups(subset='all', remove=('headers', 'footers', 'quotes'))['data']
+small=docs[0:5000]
+print("corpus={}".format(len(small)))
+topic_model = BERTopic()
+print("training topics")
+topics, probs = topic_model.fit_transform(small)
 
 print("{} Prepare data for plotting".format(datetime.datetime.now()))
-embeddings = topic_model._extract_embeddings(docs, method="document")
+embeddings = topic_model._extract_embeddings(small, method="document")
 umap_model = UMAP(n_neighbors=10, n_components=2, min_dist=0.0, metric='cosine').fit(embeddings)
 df = pd.DataFrame(umap_model.embedding_, columns=["x", "y"])
 df["topic"] = topics
