@@ -14,8 +14,14 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 topic_model=BERTopic.load("trained_2.topics")
 print("{}\tvisualise".format(datetime.datetime.now()))
+
+fig, matrix=topic_model.visualize_heatmap()
+fig.show()
+
+
 fig=topic_model.visualize_topics()
 fig.show()
+#fig.write_html("path/to/file.html")
 
 fig=topic_model.visualize_hierarchy()
 fig.show()
@@ -23,8 +29,7 @@ fig.show()
 fig=topic_model.visualize_barchart()
 fig.show()
 
-fig=topic_model.visualize_heatmap()
-fig.show()
+
 #
 fig=topic_model.visualize_term_rank()
 fig.show()
