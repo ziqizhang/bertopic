@@ -48,7 +48,7 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5):
 
         print(">>>\t\t\tcreating and saving visualization - topic viz {}".format(datetime.datetime.now()))
         try:
-            fig = topic_model.visualize_topics()
+            fig = topic_model.visualize_topics(top_n_topics=100)
             fig.write_html(out_file_folder + "/" + out_file_name + ".viztopic.html")
         except:
             print(">>>\t\t\t\tunable to create topic viz {}".format(datetime.datetime.now()))
@@ -57,7 +57,7 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5):
 
         print(">>>\t\t\tcreating and saving visualization - hierarchy {}".format(datetime.datetime.now()))
         try:
-            fig = topic_model.visualize_hierarchy()
+            fig = topic_model.visualize_hierarchy(top_n_topics=100)
             fig.write_html(out_file_folder + "/" + out_file_name + ".hierarchy.html")
         except:
             print(">>>\t\t\t\tunable to create hierarchy viz {}".format(datetime.datetime.now()))
