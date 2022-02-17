@@ -50,7 +50,7 @@ def visualize_topic_documents(docs:list, topics, topic_model, outfile):
     ax.text(0.99, 0.01, f"BERTopic - Top {top_n} topics", transform=ax.transAxes, horizontalalignment="right", color="black")
     plt.xticks([], [])
     plt.yticks([], [])
-    plt.savefig(outfile+"_1.pdf", format='pdf')
+    plt.savefig(outfile+"_1.png", format='png', dpi=300)
     plt.clf()
     #plt.show()
 
@@ -68,7 +68,7 @@ def visualize_topic_documents(docs:list, topics, topic_model, outfile):
         topic = int(row[1].topic)
         text = f"{topic}: " + "_".join([x[0] for x in topic_model.get_topic(topic)[:5]])
         ax2.text(row[1].x, row[1].y * 1.01, text, fontsize=fontsize, horizontalalignment='center')
-    plt.savefig(outfile+"_2.pdf", format='pdf')
+    plt.savefig(outfile+"_2.png", format='png', dpi=300)
     #plt.show()
 
 if __name__ == '__main__':
