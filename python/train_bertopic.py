@@ -27,7 +27,7 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, s
         count_selected+=1
         lines.append(l)
 
-    if sample is not None:
+    if sample is not None and len(lines)>sample:
         print(">>>\t\t\ttotal lines={}, sampled={}".format(count_total, sample))
         lines = random.sample(lines, sample)
 
