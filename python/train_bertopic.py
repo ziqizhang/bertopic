@@ -3,7 +3,7 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from bertopic import BERTopic
-import sys, os, datetime, logging,traceback, pickle, viz
+import sys, os, datetime, logging,traceback, pickle, viz, random
 
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -13,7 +13,7 @@ logging.basicConfig(stream=sys.stdout,
                     datefmt='%Y-%m-%d %H:%M:%S')
 log = logging.getLogger("bertopic")
 
-def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5):
+def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, sample=None):
     file = open(in_file, 'r')
     lines=[]
 
@@ -26,6 +26,10 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5):
             continue
         count_selected+=1
         lines.append(l)
+
+    if sample is not None:
+        print(">>>\t\t\ttotal lines={}, sampled={}".format(count_total, sample))
+        lines = random.sample(lines, sample)
 
     print(">>>\t\t\ttotal lines={}, selected={}".format(count_total, count_selected))
     try:
@@ -86,6 +90,9 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5):
 if __name__ == '__main__':
     in_folder=sys.argv[1]
     out_folder=sys.argv[2]
+    dsample=0
+    if len(sys.argv)>3:
+        dsample=int(sys.argv[3])
 
     files=os.listdir(in_folder)
     print(">>>\t\tTotal files={}".format(len(files)))
@@ -93,7 +100,10 @@ if __name__ == '__main__':
     print(">>>\t\tBeginning the process")
     for file in files:
         print(">>>\t\t{} training for {}".format(datetime.datetime.now(), file))
-        train_bertopic_model(in_folder+"/"+file, out_folder, file)
+        if dsample>0:
+            train_bertopic_model(in_folder+"/"+file, out_folder, file, sample=dsample)
+        else:
+            train_bertopic_model(in_folder + "/" + file, out_folder, file)
         print(">>>\t\tcompleted")
 
 
