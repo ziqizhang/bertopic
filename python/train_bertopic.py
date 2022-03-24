@@ -45,9 +45,13 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, s
         query.save_topic_keywords(topic_model,out_file_folder+"/"+out_file_name+'.keywords.csv', topics=20)
 
         print(">>>\t\t\tcalculating topic coherence {}".format(datetime.datetime.now()))
-        tc=query.calculate_topic_coherence(topic_model,topics,lines)
-        tc_file.write(out_file_name+","+str(tc)+"\n")
-        print("\t\t\tTC for {}, {}".format(out_file_name, tc))
+        try:
+            tc=query.calculate_topic_coherence(topic_model,topics,lines)
+            tc_file.write(out_file_name+","+str(tc)+"\n")
+            print("\t\t\tTC for {}, {}".format(out_file_name, tc))
+        except Exception:
+            print(">>>\t\tcannot calculate topic coherence, moving on")
+            print(traceback.format_exc())
 
         print(">>>\t\t\tcreating and saving visualization - heatmap {}".format(datetime.datetime.now()))
         try:
@@ -111,7 +115,7 @@ if __name__ == '__main__':
     files.sort()
     print(">>>\t\tBeginning the process")
     for file in files:
-        print(">>>\t\t{} training for {}".format(datetime.datetime.now(), file))
+        print(">>>NEW FILE\t\t{} training for {}".format(datetime.datetime.now(), file))
         if dsample>0:
             train_bertopic_model(in_folder+"/"+file, out_folder, file, sample=dsample)
         else:
