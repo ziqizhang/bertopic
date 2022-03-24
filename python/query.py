@@ -19,7 +19,7 @@ def save_topic_keywords(topicmodel, outfile, topics=20):
         for t in topicmodel.get_topics():
             if t==-1:
                 continue
-            words=topic_model.get_topic(t)
+            words=topicmodel.get_topic(t)
 
             count_words=1
             row=[str(t)]
