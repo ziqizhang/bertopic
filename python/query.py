@@ -50,7 +50,7 @@ def calculate_topic_coherence(topic_model, doc_topics_prob, inputdocs):
     tokens = [analyzer(doc) for doc in cleaned_docs]
     dictionary = corpora.Dictionary(tokens)
     corpus = [dictionary.doc2bow(token) for token in tokens]
-    topic_words = [[words for words, _ in topic_model.get_topic(topic)]
+    topic_words = [[words for words, _ in topic_model.get_topic(topic) if words!='']
                    for topic in range(len(set(doc_topics_prob)) - 1)]
 
     # Evaluate
