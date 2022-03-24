@@ -3,7 +3,7 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from bertopic import BERTopic
-import sys, os, datetime, logging,traceback, pickle, viz, random
+import sys, os, datetime, logging,traceback, pickle, viz, query, random
 
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -15,6 +15,7 @@ log = logging.getLogger("bertopic")
 
 def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, sample=None):
     file = open(in_file, 'r')
+    tc_file=open(out_file_folder+"/topic_coherence.txt",'w')
     lines=[]
 
     count_total=0
@@ -40,9 +41,16 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, s
         print(">>>\t\t\tsaving model {}".format(datetime.datetime.now()))
         topic_model.save(out_file_folder+"/"+out_file_name+".topics")
 
+        print(">>>\t\t\tsaving topic keywords {}".format(datetime.datetime.now()))
+        query.save_topic_keywords(topic_model,out_file_folder+"/"+out_file_name+'.keywords.csv', topics=20)
+
+        print(">>>\t\t\tcalculating topic coherence {}".format(datetime.datetime.now()))
+        tc=query.calculate_topic_coherence(topic_model,topics,lines)
+        tc_file.write(out_file_name+","+str(tc)+"\n")
+
         print(">>>\t\t\tcreating and saving visualization - heatmap {}".format(datetime.datetime.now()))
         try:
-            fig, matrix = topic_model.visualize_heatmap(top_n_topics=100)
+            fig, matrix = topic_model.visualize_heatmap(top_n_topics=20)
             fig.write_html(out_file_folder+"/"+out_file_name+".heatmap.html")
             with open(out_file_folder+"/"+out_file_name+".similarities.pickle", 'wb') as outp:
                 pickle.dump(matrix, outp, pickle.HIGHEST_PROTOCOL)
@@ -52,7 +60,7 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, s
 
         print(">>>\t\t\tcreating and saving visualization - topic viz {}".format(datetime.datetime.now()))
         try:
-            fig = topic_model.visualize_topics(top_n_topics=100)
+            fig = topic_model.visualize_topics(top_n_topics=20)
             fig.write_html(out_file_folder + "/" + out_file_name + ".viztopic.html")
         except:
             print(">>>\t\t\t\tunable to create topic viz {}".format(datetime.datetime.now()))
@@ -61,7 +69,7 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, s
 
         print(">>>\t\t\tcreating and saving visualization - hierarchy {}".format(datetime.datetime.now()))
         try:
-            fig = topic_model.visualize_hierarchy(top_n_topics=100)
+            fig = topic_model.visualize_hierarchy(top_n_topics=20)
             fig.write_html(out_file_folder + "/" + out_file_name + ".hierarchy.html")
         except:
             print(">>>\t\t\t\tunable to create hierarchy viz {}".format(datetime.datetime.now()))
@@ -78,7 +86,8 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, s
         #
         print(">>>\t\t\tcreating and saving visualization - topic/doc, doc {}".format(datetime.datetime.now()))
         try:
-            viz.visualize_topic_documents(lines,topics, topic_model, out_file_folder + "/" + out_file_name + ".topicdoc")
+            viz.visualize_topic_documents(lines,topics, topic_model, out_file_folder + "/" + out_file_name + ".topicdoc",
+                                          topn=20)
         except:
             print(">>>\t\t\t\tunable to create topic/doc viz {}".format(datetime.datetime.now()))
             print(traceback.format_exc())
@@ -86,6 +95,8 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, s
     except:
         print(traceback.format_exc())
 
+    file.close()
+    tc_file.close()
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     in_folder=sys.argv[1]
