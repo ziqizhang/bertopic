@@ -47,7 +47,7 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, s
         print(">>>\t\t\tcalculating topic coherence {}".format(datetime.datetime.now()))
         tc=query.calculate_topic_coherence(topic_model,topics,lines)
         tc_file.write(out_file_name+","+str(tc)+"\n")
-        print("\t\t\t{}, {}".format(out_file_name, tc))
+        print("\t\t\tTC for {}, {}".format(out_file_name, tc))
 
         print(">>>\t\t\tcreating and saving visualization - heatmap {}".format(datetime.datetime.now()))
         try:
