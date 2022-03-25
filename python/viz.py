@@ -1,6 +1,7 @@
 #see https://github.com/MaartenGr/BERTopic/issues/126
 
 import pandas as pd
+from matplotlib.cm import ScalarMappable
 from sklearn.feature_extraction.text import CountVectorizer
 from umap import UMAP
 from bertopic import BERTopic
@@ -43,13 +44,15 @@ def visualize_topic_documents(docs:list, topics, topic_model, outfile, topn=20):
     #                                          '#F48FB1', # Light Pink
     #                                          ])
 
+
     fig, ax = plt.subplots(figsize=(15, 15))
     scatter_outliers = ax.scatter(outliers['x'], outliers['y'], color="#E0E0E0", s=1, alpha=.3)
-    scatter = ax.scatter(non_outliers['x'], non_outliers['y'], c=non_outliers['topic'], s=1, alpha=.3, cmap='hsv_r')
+    scatter = ax.scatter(non_outliers['x'], non_outliers['y'], c=non_outliers['topic'], s=3, alpha=.3, cmap='hsv_r')
     ax.text(0.99, 0.01, f"BERTopic - Top {top_n} topics", transform=ax.transAxes, horizontalalignment="right", color="black")
     plt.xticks([], [])
     plt.yticks([], [])
-    plt.colorbar(scatter)
+    plt.colorbar(ScalarMappable(cmap=scatter.get_cmap(), norm=scatter.norm))
+    plt.tight_layout()
     plt.savefig(outfile+"_1.png", format='png', dpi=300)
     plt.clf()
     plt.close()
@@ -57,7 +60,7 @@ def visualize_topic_documents(docs:list, topics, topic_model, outfile, topn=20):
 
     fig2, ax2 = plt.subplots(figsize=(15, 15))
     scatter_outliers = ax2.scatter(outliers['x'], outliers['y'], color="#E0E0E0", s=1, alpha=.3)
-    scatter = ax2.scatter(non_outliers['x'], non_outliers['y'], c=non_outliers['topic'], s=1, alpha=.3, cmap='hsv_r')
+    scatter = ax2.scatter(non_outliers['x'], non_outliers['y'], c=non_outliers['topic'], s=3, alpha=.3, cmap='hsv_r')
 
     ax2.text(0.99, 0.01, f"BERTopic - Top {top_n} topics", transform=ax.transAxes, horizontalalignment="right",
             color="black")
@@ -69,7 +72,8 @@ def visualize_topic_documents(docs:list, topics, topic_model, outfile, topn=20):
         topic = int(row[1].topic)
         text = f"{topic}: " + "_".join([x[0] for x in topic_model.get_topic(topic)[:5]])
         ax2.text(row[1].x, row[1].y * 1.01, text, fontsize=fontsize, horizontalalignment='center')
-    plt.colorbar(scatter)
+    plt.colorbar(ScalarMappable(cmap=scatter.get_cmap(), norm=scatter.norm))
+    plt.tight_layout()
     plt.savefig(outfile+"_2.png", format='png', dpi=300)
     plt.clf()
     plt.close()
@@ -78,7 +82,7 @@ def visualize_topic_documents(docs:list, topics, topic_model, outfile, topn=20):
 if __name__ == '__main__':
     print("{} Create topic model".format(datetime.datetime.now()))
     docs = fetch_20newsgroups(subset='all', remove=('headers', 'footers', 'quotes'))['data']
-    small = docs[0:4000]
+    small = docs[0:3000]
     print("corpus={}".format(len(small)))
     vectorizer_model = CountVectorizer(stop_words="english")
     topic_model = BERTopic(vectorizer_model=vectorizer_model)
