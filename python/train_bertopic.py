@@ -15,7 +15,7 @@ log = logging.getLogger("bertopic")
 
 def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, sample=None):
     file = open(in_file, 'r')
-    tc_file=open(out_file_folder+"/topic_coherence.txt",'w')
+    tc_file=open(out_file_folder+"/topic_coherence.txt",'a')
     lines=[]
 
     count_total=0
@@ -43,15 +43,6 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, s
 
         print(">>>\t\t\tsaving topic keywords {}".format(datetime.datetime.now()))
         query.save_topic_keywords(topic_model,out_file_folder+"/"+out_file_name+'.keywords.csv', topics=20)
-
-        print(">>>\t\t\tcalculating topic coherence {}".format(datetime.datetime.now()))
-        try:
-            tc=query.calculate_topic_coherence(topic_model,topics,lines)
-            tc_file.write(out_file_name+","+str(tc)+"\n")
-            print("\t\t\tTC for {}, {}".format(out_file_name, tc))
-        except Exception:
-            print(">>>\t\tcannot calculate topic coherence, moving on")
-            print(traceback.format_exc())
 
         print(">>>\t\t\tcreating and saving visualization - heatmap {}".format(datetime.datetime.now()))
         try:
@@ -97,6 +88,15 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, s
             print(">>>\t\t\t\tunable to create topic/doc viz {}".format(datetime.datetime.now()))
             print(traceback.format_exc())
 
+        print(">>>\t\t\tcalculating topic coherence {}".format(datetime.datetime.now()))
+        try:
+            tc = query.calculate_topic_coherence(topic_model, topics, lines)
+            tc_file.write(out_file_name + "," + str(tc) + "\n")
+            print("\t\t\tTC for {}, {}".format(out_file_name, tc))
+        except Exception:
+            print(">>>\t\tcannot calculate topic coherence, moving on")
+            print(traceback.format_exc())
+            
     except:
         print(traceback.format_exc())
 
