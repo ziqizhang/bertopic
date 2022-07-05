@@ -3,10 +3,10 @@ import logging, datetime, sys, traceback, pickle
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
-file = open("topics.pickle",'rb')
-object_file = pickle.load(file)
-file = open("topic_probs.pickle",'rb')
-object_file = pickle.load(file)
+# file = open("topics.pickle",'rb')
+# object_file = pickle.load(file)
+# file = open("topic_probs.pickle",'rb')
+# object_file = pickle.load(file)
 
 small=[]
 for i in range(0, 2000):
