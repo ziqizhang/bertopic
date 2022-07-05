@@ -51,10 +51,10 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, s
 
         print(">>>\t\t\tcreating and saving visualization - heatmap {}".format(datetime.datetime.now()))
         try:
-            fig, matrix = topic_model.visualize_heatmap(top_n_topics=20)
+            fig  = topic_model.visualize_heatmap(top_n_topics=20)
             fig.write_html(out_file_folder+"/"+out_file_name+".heatmap.html")
-            with open(out_file_folder+"/"+out_file_name+".similarities.pickle", 'wb') as outp:
-                pickle.dump(matrix, outp, pickle.HIGHEST_PROTOCOL)
+            # with open(out_file_folder+"/"+out_file_name+".similarities.pickle", 'wb') as outp:
+            #     pickle.dump(matrix, outp, pickle.HIGHEST_PROTOCOL)
         except:
             print(">>>\t\t\t\tunable to create heatmap {}".format(datetime.datetime.now()))
             print(traceback.format_exc())
