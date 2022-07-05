@@ -35,9 +35,14 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, s
     print(">>>\t\t\ttotal lines={}, selected={}".format(count_total, count_selected))
     try:
         vectorizer_model = CountVectorizer(stop_words="english")
-        topic_model = BERTopic(vectorizer_model=vectorizer_model)
+        topic_model = BERTopic(vectorizer_model=vectorizer_model, calculate_probabilities=True)
         print(">>>\t\t\ttraining topics {}".format(datetime.datetime.now()))
         topics, probs = topic_model.fit_transform(lines)
+        with open(out_file_folder + "/" + out_file_name + ".topics.pickle", 'wb') as outp:
+            pickle.dump(topics, outp, pickle.HIGHEST_PROTOCOL)
+        with open(out_file_folder + "/" + out_file_name + ".topic_probs.pickle", 'wb') as outp:
+            pickle.dump(probs, outp, pickle.HIGHEST_PROTOCOL)
+
         print(">>>\t\t\tsaving model {}".format(datetime.datetime.now()))
         topic_model.save(out_file_folder+"/"+out_file_name+".topics")
 
@@ -96,7 +101,7 @@ def train_bertopic_model(in_file, out_file_folder, out_file_name, min_words=5, s
         except Exception:
             print(">>>\t\tcannot calculate topic coherence, moving on")
             print(traceback.format_exc())
-            
+
     except:
         print(traceback.format_exc())
 
