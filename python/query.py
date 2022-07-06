@@ -121,7 +121,7 @@ def proportion_unique_words(topics, topk=10):
 if __name__ == '__main__':
     #load a trained topic model
     path='/home/zz/Work/data/washimData/wasimdata.txt.topics'
-    path='/home/zz/Work/data/amazon/Digital_Music_5.txt.topics'
+    #path='/home/zz/Work/data/amazon/Digital_Music_5.txt.topics'
     topic_model=BERTopic.load(path)
     print("loaded")
     #for a list of supported queries, see https://github.com/MaartenGr/BERTopic end of page

@@ -12,6 +12,8 @@ if __name__ == '__main__':
     in_folder=sys.argv[1]
     out_file = sys.argv[2]
     solr_url=sys.argv[3]
+    min_words=5 #note: this must be the same as the min_words used in the train_bertopic.py file to ensure the same number of documents are indexed
+    #here as that go through the TM process
     csvfile= open(out_file+'.csv', 'w', newline='', encoding='utf-8')
     csvwriter = csv.writer(csvfile, quotechar='"', delimiter=',', quoting=csv.QUOTE_ALL)
     csvwriter.writerow(["ID", "Blog", "Post","Text"])
@@ -28,6 +30,9 @@ if __name__ == '__main__':
         for path in raw_data:
             text_file = open(path, "r")
             data = text_file.read().replace("\n"," ").strip()
+            if len(data.split(" ")) < min_words:
+                continue
+
             text_file.close()
             filename=str(path)
             filename = filename[filename.index(in_folder)+len(in_folder)+1:]
